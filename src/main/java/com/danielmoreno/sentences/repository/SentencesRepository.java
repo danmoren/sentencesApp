@@ -7,4 +7,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface SentencesRepository extends MongoRepository<Sentences, String> {
 
     Sentences findBy_id(ObjectId _id);
+    Sentences findByNounEqualsAndVerbEqualsAndAdjectiveEquals(String noun, String verb, String adjective);
 }
