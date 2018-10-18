@@ -2,9 +2,10 @@ package com.danielmoreno.sentences.repository;
 
 import com.danielmoreno.sentences.entity.Words;
 
+import java.util.Optional;
+
 public interface WordsRepositoryCustom {
 
-    //Receives the desired type of word
-    Words getSingleRandomWord(String wordCategory);
+    Optional<Words> getSingleRandomWord(String wordCategory);
 
 }

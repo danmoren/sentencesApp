@@ -28,6 +28,7 @@ public class WordsController {
     //Insert a word
     @RequestMapping(value = "/{word}", method = RequestMethod.PUT)
     public ResponseEntity createWord(@PathVariable String word, @Valid @RequestBody WordPayload payload) {
+        //TODO - This method should be improved!!
         Words result = wordsRepository.findByWord(word);
         if (result == null) {
             if (AppUtils.isValidCategory(payload.getWord().getWordCategory())) {
@@ -38,11 +39,23 @@ public class WordsController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid word category");
             }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Word already exists");
+            if (result.getWord().equals(word) && result.getWordCategory()
+                    .equals(payload.getWord().getWordCategory())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Word already exists");
+            } else {
+                if (AppUtils.isValidCategory(payload.getWord().getWordCategory())) {
+                    Words w = new Words(new ObjectId(), word, payload.getWord().getWordCategory());
+                    wordsRepository.save(w);
+                    return ResponseEntity.ok("Word " + word + " successfully saved");
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid word category");
+                }
+            }
         }
     }
 
     //Retrieve a single word (if exists)
+    //Could retrieve multiple words since same word could fit multiple categories
     @RequestMapping(value = "/{word}", method = RequestMethod.GET)
     public ResponseEntity getWordsByName(@PathVariable("word") String word) {
         Words result = wordsRepository.findByWord(word);

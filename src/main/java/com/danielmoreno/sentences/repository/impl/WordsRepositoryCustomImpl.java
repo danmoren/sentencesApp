@@ -9,6 +9,9 @@ import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.SampleOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 
+import java.util.List;
+import java.util.Optional;
+
 public class WordsRepositoryCustomImpl implements WordsRepositoryCustom {
 
     private final MongoTemplate mongoTemplate;
@@ -19,14 +22,21 @@ public class WordsRepositoryCustomImpl implements WordsRepositoryCustom {
     }
 
     @Override
-    public Words getSingleRandomWord(String wordCategory) {
+    //public Words getSingleRandomWord(String wordCategory) {
+    public Optional<Words> getSingleRandomWord(String wordCategory) {
 
         SampleOperation sampleOperation = getSampleOperation();
 
         //TODO - fix this, looks not that nice - could cause an NPE?
+        /*
         return mongoTemplate.aggregate(Aggregation.newAggregation(
                 Aggregation.match(Criteria.where("wordCategory").in(wordCategory)), sampleOperation),
                 Words.class, Words.class).getMappedResults().get(0);
+                */
+
+        return Optional.ofNullable(mongoTemplate.aggregate(Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("wordCategory").in(wordCategory)),
+                sampleOperation), Words.class, Words.class).getUniqueMappedResult());
 
     }
 

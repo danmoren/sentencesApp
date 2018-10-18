@@ -3,10 +3,7 @@ package com.danielmoreno.sentences.util;
 import com.danielmoreno.sentences.entity.Sentences;
 import com.danielmoreno.sentences.entity.Words;
 import com.danielmoreno.sentences.enums.WordCategoryEnum;
-import com.danielmoreno.sentences.model.Sentence;
-import com.danielmoreno.sentences.model.SentencePayload;
-import com.danielmoreno.sentences.model.Word;
-import com.danielmoreno.sentences.model.WordPayload;
+import com.danielmoreno.sentences.model.*;
 import org.apache.commons.lang3.EnumUtils;
 import org.bson.types.ObjectId;
 
@@ -42,22 +39,28 @@ public class AppUtils {
 
     public static SentencePayload buildSentenceResponse(Sentences sentence, boolean isYodaTalk) {
         Sentence responseSentence = new Sentence();
-        if (isYodaTalk) {
-            responseSentence.setText(buildJoinedSentence(sentence.getNoun(),
-                    sentence.getVerb(), sentence.getAdjective()));
-        } else {
-            responseSentence.setText(buildJoinedSentence(sentence.getNoun(),
-                    sentence.getAdjective(), sentence.getVerb()));
-        }
-        responseSentence.setDisplayCount(sentence.getDisplayCount());
+        SentenceBase responseSentenceBase = new SentenceBase();
         SentencePayload payload = new SentencePayload();
-        payload.setSentence(responseSentence);
+        if (isYodaTalk) {
+            //YodaTalk order: ADJECTIVE - NOUN - VERB
+            responseSentenceBase.setText(buildJoinedSentence(sentence.getAdjective(), sentence.getNoun(),
+                    sentence.getVerb(), true));
+            payload.setSentence(responseSentenceBase);
+        } else {
+            //YodaTalk order: NOUN - VERB - ADJECTIVE
+            responseSentence.setText(buildJoinedSentence(sentence.getNoun(),
+                    sentence.getVerb(), sentence.getAdjective(), false));
+            responseSentence.setDisplayCount(sentence.getDisplayCount());
+            payload.setSentence(responseSentence);
+        }
         return payload;
     }
 
-    //TODO - make it more dynamic (StringJoiner maybe?)
-    private static String buildJoinedSentence(String word1, String word2, String word3) {
+    private static String buildJoinedSentence(String word1, String word2, String word3, boolean isYodaTalk) {
         StringJoiner joiner = new StringJoiner(" ");
+        if (isYodaTalk) {
+            word1 = word1 + ",";
+        }
         joiner.add(word1).add(word2).add(word3);
         return joiner.toString();
     }

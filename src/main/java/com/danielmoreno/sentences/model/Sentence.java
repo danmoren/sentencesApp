@@ -1,17 +1,11 @@
 package com.danielmoreno.sentences.model;
 
-public class Sentence {
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-    private String text;
+public class Sentence extends SentenceBase {
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private int displayCount;
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
 
     public int getDisplayCount() {
         return displayCount;

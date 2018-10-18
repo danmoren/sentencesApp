@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/sentences")
@@ -35,47 +36,59 @@ public class SentencesController {
     public ResponseEntity generateSentences() {
         //TODO - This can be more dynamical
         //TODO - this method is too big!!
-        Words noun = wordsRepository.getSingleRandomWord("NOUN");
-        Words verb = wordsRepository.getSingleRandomWord("VERB");
-        Words adjective = wordsRepository.getSingleRandomWord("ADJECTIVE");
+        Optional<Words> noun = wordsRepository.getSingleRandomWord("NOUN");
+        Optional<Words> verb = wordsRepository.getSingleRandomWord("VERB");
+        Optional<Words> adjective = wordsRepository.getSingleRandomWord("ADJECTIVE");
 
-        if (noun == null || verb == null || adjective == null) {
+        if (!noun.isPresent() || !verb.isPresent() || !adjective.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing words to build the sentence");
         } else {
             //Check if the sentence already exists
             Sentences repeatedSentence = sentencesRepository.findByNounEqualsAndVerbEqualsAndAdjectiveEquals(
-                    noun.getWord(), verb.getWord(), adjective.getWord());
+                    noun.get().getWord(), verb.get().getWord(), adjective.get().getWord());
             if (repeatedSentence != null) {
-                //Increase the generationCounter
+                //int genTimes = repeatedSentence.getGenerationCount() + 1;
                 repeatedSentence.setGenerationCount(repeatedSentence.getGenerationCount() + 1);
                 sentencesRepository.save(repeatedSentence);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sentence already generated");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Sentence already generated");
             } else {
-                sentencesRepository.save(AppUtils.buildSentence(noun, verb, adjective));
-                return ResponseEntity.ok("Sentence successfully generated");
+                Sentences newSentence = AppUtils.buildSentence(noun.get(), verb.get(), adjective.get());
+                sentencesRepository.save(newSentence);
+                return ResponseEntity.ok("Sentence successfully generated with id: " + newSentence.get_id().toString());
             }
         }
     }
 
     @RequestMapping(value = "/{sentenceID}", method = RequestMethod.GET)
     public ResponseEntity getSentenceByID(@PathVariable String sentenceID) {
-        //TODO - fix this! PROBABLY WILL NOT WORK
         Sentences result = sentencesRepository.findBy_id(new ObjectId(sentenceID));
         if (result == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sentence not found");
         } else {
+            result.setDisplayCount(result.getDisplayCount() + 1);
+            sentencesRepository.save(result);
             return ResponseEntity.ok(AppUtils.buildSentenceResponse(result, false));
         }
     }
 
     @RequestMapping(value = "/{sentenceID}/yodaTalk", method = RequestMethod.GET)
     public ResponseEntity getYodaTalk(@PathVariable String sentenceID) {
-        //TODO - fix this! PROBABLY WILL NOT WORK
         Sentences result = sentencesRepository.findBy_id(new ObjectId(sentenceID));
         if (result == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sentence not found");
         } else {
             return ResponseEntity.ok(AppUtils.buildSentenceResponse(result, true));
+        }
+    }
+
+    @RequestMapping(value = "/{sentenceID}/generation", method = RequestMethod.GET)
+    public ResponseEntity getRepetitionsByID(@PathVariable String sentenceID) {
+        Sentences result = sentencesRepository.findBy_id(new ObjectId(sentenceID));
+        if (result == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sentence not found");
+        } else {
+            return ResponseEntity.ok("This sentence has been generated " + result.getGenerationCount() + " times");
         }
     }
 }

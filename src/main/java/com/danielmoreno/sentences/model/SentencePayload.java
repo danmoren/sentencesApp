@@ -2,13 +2,13 @@ package com.danielmoreno.sentences.model;
 
 public class SentencePayload {
 
-    private Sentence sentence;
+    private SentenceBase sentence;
 
-    public Sentence getSentence() {
+    public SentenceBase getSentence() {
         return sentence;
     }
 
-    public void setSentence(Sentence sentence) {
+    public void setSentence(SentenceBase sentence) {
         this.sentence = sentence;
     }
 }
