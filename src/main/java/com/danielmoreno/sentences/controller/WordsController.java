@@ -69,7 +69,9 @@ public class WordsController {
 
     //Non required, yet implemented
     @RequestMapping(value = "/{word}", method = RequestMethod.DELETE)
-    public void deletePet(@PathVariable String word) {
-        //wordsRepository.delete(wordsRepository.findByWord(word));
+    public void deleteWord(@PathVariable String word) {
+        for (Words words : wordsRepository.findByWord(word)) {
+            wordsRepository.delete(words);
+        }
     }
 }
