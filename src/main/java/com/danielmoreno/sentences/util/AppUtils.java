@@ -8,6 +8,7 @@ import org.apache.commons.lang3.EnumUtils;
 import org.bson.types.ObjectId;
 
 import java.util.Date;
+import java.util.List;
 import java.util.StringJoiner;
 
 public class AppUtils {
@@ -16,10 +17,21 @@ public class AppUtils {
         return EnumUtils.isValidEnum(WordCategoryEnum.class, category);
     }
 
-    public static WordPayload buildWordResponse(Words info, String word) {
+    //public static WordPayload buildWordResponse(Words info, String word) {
+    public static WordPayload buildWordResponse(List<Words> info, String word) {
         Word responseWord = new Word();
         responseWord.setWord(word);
-        responseWord.setWordCategory(info.getWordCategory());
+        if (info.size() > 1) {
+            String categories = "";
+            StringJoiner joiner = new StringJoiner(",");
+            for (Words words : info) {
+                categories = categories + words.getWordCategory() + " ";
+                joiner.add(words.getWordCategory());
+            }
+            responseWord.setWordCategory(joiner.toString());
+        } else {
+            responseWord.setWordCategory(info.get(0).getWordCategory());
+        }
         WordPayload responsePayload = new WordPayload();
         responsePayload.setWord(responseWord);
         return responsePayload;
