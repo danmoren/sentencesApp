@@ -16,4 +16,5 @@ public final class AppConstants {
     public static final String SENTENCE_NOT_FOUND = "Sentence not found";
     public static final String TIMES_GENERATED = "Times generated: ";
     public static final String INVALID_SENTENCE_ID = "Invalid sentence ID";
+    public static final int SAMPLE_SIZE = 1;
 }

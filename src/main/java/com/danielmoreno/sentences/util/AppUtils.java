@@ -60,9 +60,18 @@ public class AppUtils {
         return newSentence;
     }
 
-    public static SentencePayload buildSentenceResponse(Sentences sentence, boolean isYodaTalk) {
+    public static SentencePayload buildSentenceResponse(Sentences sentence) {
         Sentence responseSentence = new Sentence();
-        SentenceBase responseSentenceBase = new SentenceBase();
+        SentencePayload payload = new SentencePayload();
+        //Normal order: NOUN - VERB - ADJECTIVE
+        responseSentence.setText(buildJoinedSentence(sentence.getNoun(),
+                sentence.getVerb(), sentence.getAdjective(), false));
+        responseSentence.setDisplayCount(sentence.getDisplayCount());
+        payload.setSentence(responseSentence);
+        return payload;
+        /*
+        Sentence responseSentence = new Sentence();
+        YodaSentence responseSentenceBase = new YodaSentence();
         SentencePayload payload = new SentencePayload();
         if (isYodaTalk) {
             //YodaTalk order: ADJECTIVE - NOUN - VERB
@@ -77,12 +86,23 @@ public class AppUtils {
             payload.setSentence(responseSentence);
         }
         return payload;
+        */
+    }
+
+    public static YodaSentencePayload buildYodaSentenceResponse(Sentences sentence) {
+        YodaSentence responseSentenceBase = new YodaSentence();
+        YodaSentencePayload payload = new YodaSentencePayload();
+        //YodaTalk order: ADJECTIVE - NOUN - VERB
+        responseSentenceBase.setText(buildJoinedSentence(sentence.getAdjective(), sentence.getNoun(),
+                sentence.getVerb(), true));
+        payload.setSentence(responseSentenceBase);
+        return payload;
     }
 
     public static List<SentencePayload> buildSentencesResponse(List<Sentences> sentencesList) {
         List<SentencePayload> responseList = new ArrayList<>();
         for (Sentences sentence : sentencesList) {
-            responseList.add(buildSentenceResponse(sentence, false));
+            responseList.add(buildSentenceResponse(sentence));
         }
         return responseList;
     }

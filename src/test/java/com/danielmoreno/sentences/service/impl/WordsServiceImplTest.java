@@ -45,7 +45,6 @@ public class WordsServiceImplTest {
         when(wordsRepositoryMock.findAll()).thenReturn(wordsList);
         ResponseEntity result = wordsService.getAllWords();
 
-        //TODO - Does it makes sense?
         Type wordsPayloadListType = new TypeToken<ArrayList<WordPayload>>(){}.getType();
         List<WordPayload> wordsPayloadList = gson.fromJson(getFile("words/wordsList.json"), wordsPayloadListType);
         String jsonInString = gson.toJson(wordsPayloadList);

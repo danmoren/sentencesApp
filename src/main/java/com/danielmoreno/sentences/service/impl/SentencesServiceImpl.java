@@ -87,7 +87,7 @@ public class SentencesServiceImpl implements SentencesService {
             } else {
                 result.setDisplayCount(result.getDisplayCount() + 1);
                 sentencesRepository.save(result);
-                return ResponseEntity.ok(AppUtils.buildSentenceResponse(result, false));
+                return ResponseEntity.ok(AppUtils.buildSentenceResponse(result));
             }
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
@@ -103,7 +103,7 @@ public class SentencesServiceImpl implements SentencesService {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                         new GenericResponse(AppConstants.SENTENCE_NOT_FOUND));
             } else {
-                return ResponseEntity.ok(AppUtils.buildSentenceResponse(result, true));
+                return ResponseEntity.ok(AppUtils.buildYodaSentenceResponse(result));
             }
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
@@ -128,7 +128,7 @@ public class SentencesServiceImpl implements SentencesService {
         }
     }
 
-    public boolean isValidSentenceID(String sentenceID) {
+    private boolean isValidSentenceID(String sentenceID) {
         ObjectId objectId;
         try {
             objectId = new ObjectId(sentenceID);

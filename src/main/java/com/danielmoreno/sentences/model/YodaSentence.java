@@ -1,6 +1,6 @@
 package com.danielmoreno.sentences.model;
 
-public class SentenceBase {
+public class YodaSentence {
 
     private String text;
 
