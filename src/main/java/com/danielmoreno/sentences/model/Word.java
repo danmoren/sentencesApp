@@ -9,6 +9,13 @@ public class Word {
     @NotNull(message = "You must enter a word category")
     private String wordCategory;
 
+    public Word() {}
+
+    public Word(String word, String wordCategory) {
+        this.word = word;
+        this.wordCategory = wordCategory;
+    }
+
     public String getWord() {
         return word;
     }

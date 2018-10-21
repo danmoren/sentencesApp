@@ -5,9 +5,7 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import javafx.application.Application;
 import org.junit.Assert;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
@@ -29,14 +27,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 //@ContextConfiguration(classes = Application.class)
 @DataMongoTest
-@ExtendWith(SpringExtension.class)
 public class WordsRepositoryTest {
 
 
     //Embedded Mongo?
     //Fongo?
 
-    @DisplayName("A test")
     @Test
     public void testAggregate(@Autowired MongoTemplate mongoTemplate) {
         DBObject objectToSave = BasicDBObjectBuilder.start()

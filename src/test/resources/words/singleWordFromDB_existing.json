@@ -1,0 +1,12 @@
+[
+  {
+    "_id" : {
+      "timestamp" : 1539884005,
+      "machineIdentifier" : 1875268,
+      "processIdentifier" : 1875268,
+      "counter" : 11278162
+    },
+    "word" : "test1",
+    "wordCategory" : "NOUN"
+  }
+]

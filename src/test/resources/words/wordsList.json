@@ -1,0 +1,14 @@
+[
+  {
+    "word": {
+      "word": "test1",
+      "wordCategory": "NOUN"
+    }
+  },
+  {
+    "word": {
+      "word": "test2",
+      "wordCategory": "VERB"
+    }
+  }
+]

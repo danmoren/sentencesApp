@@ -9,6 +9,12 @@ public class WordPayload {
     @Valid
     private Word word;
 
+    public WordPayload() {}
+
+    public WordPayload(Word word) {
+        this.word = word;
+    }
+
     public Word getWord() {
         return word;
     }
