@@ -42,7 +42,7 @@ public class WordsServiceImpl implements WordsService {
     public ResponseEntity getWordByName(String word) {
         List<Words> result = wordsRepository.findByWord(word);
         if (result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+            return ResponseEntity.ok(
                     new GenericResponse(AppConstants.WORD_NOT_FOUND)
             );
         } else {
@@ -61,9 +61,7 @@ public class WordsServiceImpl implements WordsService {
         List<Words> wordsList = wordsRepository.findByWord(word);
         if (!wordsList.isEmpty()) {
             if (AppUtils.checkExistingCategory(wordsList, payload.getWord().getWordCategory())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                        new GenericResponse(AppConstants.EXISTING_WORD)
-                );
+                return ResponseEntity.ok(new GenericResponse(AppConstants.EXISTING_WORD));
             } else {
                 return saveWord(word, payload.getWord().getWordCategory());
             }
@@ -85,9 +83,7 @@ public class WordsServiceImpl implements WordsService {
             wordsRepository.save(w);
             return ResponseEntity.ok(new GenericResponse(AppConstants.WORD_SAVED + word));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new GenericResponse(AppConstants.INVALID_CATEGORY)
-            );
+            return ResponseEntity.ok(new GenericResponse(AppConstants.INVALID_CATEGORY));
         }
     }
 }

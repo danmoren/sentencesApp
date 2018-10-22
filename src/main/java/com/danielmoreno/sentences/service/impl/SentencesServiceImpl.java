@@ -10,7 +10,6 @@ import com.danielmoreno.sentences.util.AppConstants;
 import com.danielmoreno.sentences.util.AppUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +45,7 @@ public class SentencesServiceImpl implements SentencesService {
     public ResponseEntity generateSentence() {
         HashMap<String, Optional<Words>> words = retrieveWords();
         if (checkIfEmpty(words)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GenericResponse(AppConstants.MISSING_WORDS));
+            return ResponseEntity.ok(new GenericResponse(AppConstants.MISSING_WORDS));
         } else {
             Sentences repeatedSentence = sentencesRepository.findByNounEqualsAndVerbEqualsAndAdjectiveEquals(
                     words.get(AppConstants.NOUN).get().getWord(),
@@ -55,8 +54,7 @@ public class SentencesServiceImpl implements SentencesService {
             if (repeatedSentence != null) {
                 repeatedSentence.setGenerationCount(repeatedSentence.getGenerationCount() + 1);
                 sentencesRepository.save(repeatedSentence);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new GenericResponse(AppConstants.EXISTING_SENTENCE));
+                return ResponseEntity.ok(new GenericResponse(AppConstants.EXISTING_SENTENCE));
             } else {
                 Sentences newSentence = AppUtils.buildSentence(
                         words.get(AppConstants.NOUN).get(),
@@ -107,16 +105,14 @@ public class SentencesServiceImpl implements SentencesService {
         if (isValidSentenceID(sentenceID)) {
             Sentences result = sentencesRepository.findBy_id(new ObjectId(sentenceID));
             if (result == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                        new GenericResponse(AppConstants.SENTENCE_NOT_FOUND));
+                return ResponseEntity.ok(new GenericResponse(AppConstants.SENTENCE_NOT_FOUND));
             } else {
                 result.setDisplayCount(result.getDisplayCount() + 1);
                 sentencesRepository.save(result);
                 return ResponseEntity.ok(AppUtils.buildSentenceResponse(result));
             }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new GenericResponse(AppConstants.INVALID_SENTENCE_ID));
+            return ResponseEntity.ok(new GenericResponse(AppConstants.INVALID_SENTENCE_ID));
         }
     }
 
@@ -131,14 +127,13 @@ public class SentencesServiceImpl implements SentencesService {
         if (isValidSentenceID(sentenceID)) {
             Sentences result = sentencesRepository.findBy_id(new ObjectId(sentenceID));
             if (result == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                return ResponseEntity.ok(
                         new GenericResponse(AppConstants.SENTENCE_NOT_FOUND));
             } else {
                 return ResponseEntity.ok(AppUtils.buildYodaSentenceResponse(result));
             }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new GenericResponse(AppConstants.INVALID_SENTENCE_ID));
+            return ResponseEntity.ok(new GenericResponse(AppConstants.INVALID_SENTENCE_ID));
         }
     }
 
@@ -153,15 +148,14 @@ public class SentencesServiceImpl implements SentencesService {
         if (isValidSentenceID(sentenceID)) {
             Sentences result = sentencesRepository.findBy_id(new ObjectId(sentenceID));
             if (result == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                return ResponseEntity.ok(
                         new GenericResponse(AppConstants.SENTENCE_NOT_FOUND));
             } else {
                 return ResponseEntity.ok(
                         new GenericResponse(AppConstants.TIMES_GENERATED + result.getGenerationCount()));
             }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new GenericResponse(AppConstants.INVALID_SENTENCE_ID));
+            return ResponseEntity.ok(new GenericResponse(AppConstants.INVALID_SENTENCE_ID));
         }
     }
 

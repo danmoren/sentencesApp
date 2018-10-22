@@ -41,7 +41,6 @@ public class SentencesServiceImplTest {
     @InjectMocks
     SentencesServiceImpl sentencesService;
 
-
     @Test
     public void getAllSentences() {
         Gson gson = new Gson();

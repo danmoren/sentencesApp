@@ -15,7 +15,6 @@ public class SentencesController {
     @Autowired
     private SentencesService sentencesService;
 
-
     /**
      * Retrieves the list of all sentences present in the DB collection
      * @return {@link ResponseEntity} the list of sentences.
