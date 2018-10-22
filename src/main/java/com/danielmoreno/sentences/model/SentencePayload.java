@@ -1,5 +1,8 @@
 package com.danielmoreno.sentences.model;
 
+/**
+ * Payload POJO for sentences
+ */
 public class SentencePayload {
 
     private Sentence sentence;

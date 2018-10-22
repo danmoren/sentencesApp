@@ -14,10 +14,21 @@ import java.util.StringJoiner;
 
 public class AppUtils {
 
+    /**
+     * Validates if a category is supported by the app, see {@link WordCategoryEnum}
+     * @param category
+     * @return {@link Boolean} <i>true</i> if the category is supported, false <i>otherwise</i>
+     */
     public static boolean isValidCategory(String category) {
         return EnumUtils.isValidEnum(WordCategoryEnum.class, category);
     }
 
+    /**
+     * Builds the payload object of a single word
+     * @param info information about the word
+     * @param word the word queried
+     * @return {@link WordPayload} with the information about the word.
+     */
     public static WordPayload buildWordResponse(List<Words> info, String word) {
         Word responseWord = new Word();
         responseWord.setWord(word);
@@ -35,6 +46,12 @@ public class AppUtils {
         return responsePayload;
     }
 
+    /**
+     * Builds the payload list of multiple words
+     * @param wordsList list with the words queried.
+     * @return {@link List} list of {@link WordPayload} with the information
+     * about each word.
+     */
     public static List<WordPayload> buildWordsResponse(List<Words> wordsList) {
         List<WordPayload> responseList = new ArrayList<>();
         for (Words word : wordsList) {
@@ -48,6 +65,13 @@ public class AppUtils {
         return responseList;
     }
 
+    /**
+     * Builds a new sentence
+     * @param noun the noun to be used
+     * @param verb the verb to be used
+     * @param adjective the adjective to be used
+     * @return a new {@link Sentences} object.
+     */
     public static Sentences buildSentence(Words noun, Words verb, Words adjective) {
         Sentences newSentence = new Sentences();
         newSentence.set_id(new ObjectId());
@@ -60,6 +84,11 @@ public class AppUtils {
         return newSentence;
     }
 
+    /**
+     * Builds the payload object of a single sentence.
+     * @param sentence information about the sentence
+     * @return {@link SentencePayload} with the information about the sentence.
+     */
     public static SentencePayload buildSentenceResponse(Sentences sentence) {
         Sentence responseSentence = new Sentence();
         SentencePayload payload = new SentencePayload();
@@ -69,26 +98,13 @@ public class AppUtils {
         responseSentence.setDisplayCount(sentence.getDisplayCount());
         payload.setSentence(responseSentence);
         return payload;
-        /*
-        Sentence responseSentence = new Sentence();
-        YodaSentence responseSentenceBase = new YodaSentence();
-        SentencePayload payload = new SentencePayload();
-        if (isYodaTalk) {
-            //YodaTalk order: ADJECTIVE - NOUN - VERB
-            responseSentenceBase.setText(buildJoinedSentence(sentence.getAdjective(), sentence.getNoun(),
-                    sentence.getVerb(), true));
-            payload.setSentence(responseSentenceBase);
-        } else {
-            //Normal order: NOUN - VERB - ADJECTIVE
-            responseSentence.setText(buildJoinedSentence(sentence.getNoun(),
-                    sentence.getVerb(), sentence.getAdjective(), false));
-            responseSentence.setDisplayCount(sentence.getDisplayCount());
-            payload.setSentence(responseSentence);
-        }
-        return payload;
-        */
     }
 
+    /**
+     * Builds the payload object of a single sentence in YodaTalk format.
+     * @param sentence information about the sentence
+     * @return {@link SentencePayload} with the information about the sentence.
+     */
     public static YodaSentencePayload buildYodaSentenceResponse(Sentences sentence) {
         YodaSentence responseSentenceBase = new YodaSentence();
         YodaSentencePayload payload = new YodaSentencePayload();
@@ -99,6 +115,11 @@ public class AppUtils {
         return payload;
     }
 
+    /**
+     * Builds the payload list of multiple sentences.
+     * @param sentencesList the list of queried sentences
+     * @return {@link List} List of sentences.
+     */
     public static List<SentencePayload> buildSentencesResponse(List<Sentences> sentencesList) {
         List<SentencePayload> responseList = new ArrayList<>();
         for (Sentences sentence : sentencesList) {
@@ -107,6 +128,14 @@ public class AppUtils {
         return responseList;
     }
 
+    /**
+     * Builds a sentences with the three categories available.
+     * @param word1 word1
+     * @param word2 word2
+     * @param word3 word3
+     * @param isYodaTalk defines if the sentence must be in YodaTalk format or not.
+     * @return {@link String} the build string with the three words.
+     */
     private static String buildJoinedSentence(String word1, String word2, String word3, boolean isYodaTalk) {
         StringJoiner joiner = new StringJoiner(AppConstants.DELIM_EMPTY_SPACE);
         if (isYodaTalk) {
@@ -116,6 +145,12 @@ public class AppUtils {
         return joiner.toString();
     }
 
+    /**
+     * Checks if a word is already created with an specific category
+     * @param wordsList Word or words already stored.
+     * @param category category to be validated
+     * @return {@link Boolean} <i>true</i> if the word was already created.
+     */
     public static boolean checkExistingCategory(List<Words> wordsList, String category) {
         boolean result = false;
         for (Words word : wordsList) {

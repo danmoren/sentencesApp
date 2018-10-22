@@ -13,6 +13,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of the {@link WordsRepositoryCustom} interface
+ */
 public class WordsRepositoryCustomImpl implements WordsRepositoryCustom {
 
     private final MongoTemplate mongoTemplate;
@@ -26,10 +29,15 @@ public class WordsRepositoryCustomImpl implements WordsRepositoryCustom {
     public Optional<Words> getSingleRandomWord(String wordCategory) {
         SampleOperation sampleOperation = getSampleOperation();
         return Optional.ofNullable(mongoTemplate.aggregate(Aggregation.newAggregation(
-                Aggregation.match(Criteria.where("wordCategory").in(wordCategory)),
+                Aggregation.match(Criteria.where(AppConstants.WORD_CATEGORY_QUERY_CRITERIA).in(wordCategory)),
                 sampleOperation), Words.class, Words.class).getUniqueMappedResult());
     }
 
+    /**
+     * Builds a {@link SampleOperation} ready to be added to the aggregation, this operation is meant
+     * to pick randomly a determined about of documents from a collection in mongo.
+     * @return {@link SampleOperation} the defined operation.
+     */
     private SampleOperation getSampleOperation() {
         return new SampleOperation(AppConstants.SAMPLE_SIZE);
     }

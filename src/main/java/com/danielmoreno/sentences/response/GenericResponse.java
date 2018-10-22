@@ -1,5 +1,8 @@
 package com.danielmoreno.sentences.response;
 
+/**
+ * Payload POJO for generic response in the app
+ */
 public class GenericResponse {
 
     private String info;

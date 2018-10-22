@@ -27,12 +27,21 @@ public class SentencesServiceImpl implements SentencesService {
     @Autowired
     WordsRepository wordsRepository;
 
+    /**
+     * Uses the {@link SentencesRepository} to query all the sentences and builds a
+     * {@link ResponseEntity} object with them.
+     * @return {@link ResponseEntity} list of retrieved sentences from DB
+     */
     @Override
     public ResponseEntity getAllSentences() {
         List<Sentences> sentencesList = sentencesRepository.findAll();
         return ResponseEntity.ok(AppUtils.buildSentencesResponse(sentencesList));
     }
 
+    /**
+     * Generates a sentence and then persists it in DB.
+     * @return {@link ResponseEntity} with the result of the operation.
+     */
     @Override
     public ResponseEntity generateSentence() {
         HashMap<String, Optional<Words>> words = retrieveWords();
@@ -60,6 +69,10 @@ public class SentencesServiceImpl implements SentencesService {
         }
     }
 
+    /**
+     * Retrieves a map with one word of each word category.
+     * @return {@link HashMap} with a random word of each word category.
+     */
     private HashMap<String, Optional<Words>> retrieveWords() {
         HashMap<String, Optional<Words>> wordsMap = new HashMap<>();
         wordsMap.put(AppConstants.NOUN, wordsRepository.getSingleRandomWord(AppConstants.NOUN));
@@ -68,6 +81,12 @@ public class SentencesServiceImpl implements SentencesService {
         return wordsMap;
     }
 
+    /**
+     * Checks if any of the words retrieved from DB is empty,
+     * that means that no single word for that category has been inserted yet.
+     * @param wordsMap {@link HashMap} with the retrieved words from DB.
+     * @return {@link Boolean} <i>true</i> if one of the words is empty.
+     */
     private boolean checkIfEmpty(HashMap<String, Optional<Words>> wordsMap) {
         for (String key : wordsMap.keySet()) {
             if (!wordsMap.get(key).isPresent()) {
@@ -77,6 +96,12 @@ public class SentencesServiceImpl implements SentencesService {
         return false;
     }
 
+    /**
+     * Uses the {@link SentencesRepository} to query one sentence and builds a
+     * {@link ResponseEntity} object with it.
+     * @param sentenceID the ID of the sentence.
+     * @return {@link ResponseEntity} with the result of the operation.
+     */
     @Override
     public ResponseEntity getSentenceByID(String sentenceID) {
         if (isValidSentenceID(sentenceID)) {
@@ -95,6 +120,12 @@ public class SentencesServiceImpl implements SentencesService {
         }
     }
 
+    /**
+     * Uses the {@link SentencesRepository} to query one sentence and builds a
+     * {@link ResponseEntity} object with it in YodaTalk.
+     * @param sentenceID the ID of the sentence.
+     * @return {@link ResponseEntity} with the result of the operation.
+     */
     @Override
     public ResponseEntity getYodaTalk(String sentenceID) {
         if (isValidSentenceID(sentenceID)) {
@@ -111,6 +142,12 @@ public class SentencesServiceImpl implements SentencesService {
         }
     }
 
+    /**
+     * Uses the {@link SentencesRepository} to query one sentence and builds a
+     * {@link ResponseEntity} object with the amount of time this sentence has been generated.
+     * @param sentenceID the ID of the sentence.
+     * @return {@link ResponseEntity} with the result of the operation.
+     */
     @Override
     public ResponseEntity getRepetitionsByID(String sentenceID) {
         if (isValidSentenceID(sentenceID)) {
@@ -128,6 +165,11 @@ public class SentencesServiceImpl implements SentencesService {
         }
     }
 
+    /**
+     * Check if an {@link ObjectId} object can be constructed out of the ID provided.
+     * @param sentenceID the ID to be verified
+     * @return {@link Boolean} <i>true</i> if the object can be built.
+     */
     private boolean isValidSentenceID(String sentenceID) {
         ObjectId objectId;
         try {

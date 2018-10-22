@@ -3,6 +3,9 @@ package com.danielmoreno.sentences.entity;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
+/**
+ * The Words entity as mapped in MongoDB collection
+ */
 public class Words {
 
     @Id

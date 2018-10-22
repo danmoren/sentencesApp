@@ -21,12 +21,23 @@ public class WordsServiceImpl implements WordsService {
     @Autowired
     private WordsRepository wordsRepository;
 
+    /**
+     * Uses the {@link WordsRepository} to query all words and builds a
+     * {@link ResponseEntity} object with them.
+     * @return {@link ResponseEntity} list of retrieved words from DB.
+     */
     @Override
     public ResponseEntity getAllWords() {
         List<Words> wordsList = wordsRepository.findAll();
         return ResponseEntity.ok(AppUtils.buildWordsResponse(wordsList));
     }
 
+    /**
+     * Uses the {@link WordsRepository} to query one word and builds a
+     * {@link ResponseEntity} object with it.
+     * @param word the word to be queried.
+     * @return {@link ResponseEntity} with the result of the operation.
+     */
     @Override
     public ResponseEntity getWordByName(String word) {
         List<Words> result = wordsRepository.findByWord(word);
@@ -39,6 +50,12 @@ public class WordsServiceImpl implements WordsService {
         }
     }
 
+    /**
+     * Validates the correctness of the word category and created a new word.
+     * @param word the new word to be inserted.
+     * @param payload JSON object with information about the word category.
+     * @return {@link ResponseEntity} with the result of the operation.
+     */
     @Override
     public ResponseEntity createWord(String word, WordPayload payload) {
         List<Words> wordsList = wordsRepository.findByWord(word);
@@ -55,6 +72,13 @@ public class WordsServiceImpl implements WordsService {
         }
     }
 
+    /**
+     * Uses the {@link WordsRepository} to create a new word after validating if already
+     * exists and the validity of a the word category.
+     * @param word the word to be inserted.
+     * @param wordCategory word category already validated.
+     * @return {@link ResponseEntity} with the result of the operation.
+     */
     private ResponseEntity saveWord(String word, String wordCategory) {
         if (AppUtils.isValidCategory(wordCategory)) {
             Words w = new Words(new ObjectId(), word, wordCategory);

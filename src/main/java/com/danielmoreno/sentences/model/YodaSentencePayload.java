@@ -1,5 +1,8 @@
 package com.danielmoreno.sentences.model;
 
+/**
+ * Payload POJO for sentences in Yoda format
+ */
 public class YodaSentencePayload {
 
     private YodaSentence sentence;

@@ -17,4 +17,5 @@ public final class AppConstants {
     public static final String TIMES_GENERATED = "Times generated: ";
     public static final String INVALID_SENTENCE_ID = "Invalid sentence ID";
     public static final int SAMPLE_SIZE = 1;
+    public static final String WORD_CATEGORY_QUERY_CRITERIA = "wordCategory";
 }

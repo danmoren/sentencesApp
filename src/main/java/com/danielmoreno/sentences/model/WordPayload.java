@@ -3,6 +3,9 @@ package com.danielmoreno.sentences.model;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Payload POJO for words
+ */
 public class WordPayload {
 
     @NotNull(message = "Wrong payload structure")

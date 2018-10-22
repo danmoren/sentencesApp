@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
+/**
+ * The Sentences entity as mapped in MongoDB collection
+ */
 public class Sentences {
 
     @Id
